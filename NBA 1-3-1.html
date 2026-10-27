@@ -1,0 +1,172 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sharp Handicapper | NBA Phase 1.3.1 spread reconciliation</title><style>:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#0a1220;color:#edf3fb;font:16px system-ui}main{max-width:850px;margin:auto;padding:18px}h1{font-size:27px;margin:0}p,small{color:#b9c8df;line-height:1.5}section{background:#162238;border:1px solid #344661;border-radius:14px;padding:17px;margin:16px 0}label{display:block;margin:10px 0 5px}select,input,button{width:100%;background:#0b1729;color:white;border:1px solid #657995;border-radius:9px;padding:12px;font:inherit}button{background:#2763c6;border:0;font-weight:700;margin-top:12px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.metric{padding:12px;background:#0e1b30;border-radius:10px}.metric strong{display:block;font-size:22px;margin-top:5px}.warn{color:#ffd38a}.ok{color:#a4efbd}#results{white-space:pre-wrap;overflow-wrap:anywhere}table{width:100%;border-collapse:collapse;font-size:13px}td,th{padding:7px;border-bottom:1px solid #344661;text-align:left}@media(max-width:560px){.grid{grid-template-columns:1fr}}</style></head><body><main><h1>Sharp Handicapper</h1><p>NBA · Phase 1.3.1 · Spread reconciliation · iPhone / GitHub Pages</p><section><strong class="warn">Research build — 2025–26 priors; automated 2026–27 completed games update provisional current-season ratings.</strong><p>All 30 teams now have different published 2025–26 regular-season ORtg, DRtg and pace, so projections calculate immediately offline. These are <b>last-season baseline estimates</b>, not verified 2026–27 form, and do not incorporate offseason roster changes, injuries or rest. You can import newer ratings via CSV or edit matchup inputs. No NFL/CFB or production files are modified.</p><label for="csv">Import NBA team ratings CSV (optional)</label><input id="csv" type="file" accept=".csv,text/csv"><small>Required headers: team,off_rtg,def_rtg,pace. Optional: games,as_of,sos_off_adj,sos_def_adj. SOS adjustments must already be estimated from pregame opponent-adjusted data; blank means 0, not verified opponent adjustment. NBA abbreviations used (e.g. BOS, NYK, GSW, LAL, PHX, SAS, NOP).</small><p id="status" role="status">30 historical 2025–26 team ratings loaded. Ready to project (historical baseline).</p></section><section><h2>Matchup</h2><div class="grid"><div><label>Away team<select id="away"><option value="ATL">Atlanta Hawks (ATL)</option><option value="BOS">Boston Celtics (BOS)</option><option value="BKN">Brooklyn Nets (BKN)</option><option value="CHA">Charlotte Hornets (CHA)</option><option value="CHI">Chicago Bulls (CHI)</option><option value="CLE">Cleveland Cavaliers (CLE)</option><option value="DAL">Dallas Mavericks (DAL)</option><option value="DEN">Denver Nuggets (DEN)</option><option value="DET">Detroit Pistons (DET)</option><option value="GSW">Golden State Warriors (GSW)</option><option value="HOU">Houston Rockets (HOU)</option><option value="IND">Indiana Pacers (IND)</option><option value="LAC">LA Clippers (LAC)</option><option value="LAL">Los Angeles Lakers (LAL)</option><option value="MEM">Memphis Grizzlies (MEM)</option><option value="MIA">Miami Heat (MIA)</option><option value="MIL">Milwaukee Bucks (MIL)</option><option value="MIN">Minnesota Timberwolves (MIN)</option><option value="NOP">New Orleans Pelicans (NOP)</option><option value="NYK">New York Knicks (NYK)</option><option value="OKC">Oklahoma City Thunder (OKC)</option><option value="ORL">Orlando Magic (ORL)</option><option value="PHI">Philadelphia 76ers (PHI)</option><option value="PHX">Phoenix Suns (PHX)</option><option value="POR">Portland Trail Blazers (POR)</option><option value="SAC">Sacramento Kings (SAC)</option><option value="SAS">San Antonio Spurs (SAS)</option><option value="TOR">Toronto Raptors (TOR)</option><option value="UTA">Utah Jazz (UTA)</option><option value="WAS">Washington Wizards (WAS)</option></select></label></div><div><label>Home team<select id="home"><option value="ATL">Atlanta Hawks (ATL)</option><option value="BOS">Boston Celtics (BOS)</option><option value="BKN">Brooklyn Nets (BKN)</option><option value="CHA">Charlotte Hornets (CHA)</option><option value="CHI">Chicago Bulls (CHI)</option><option value="CLE">Cleveland Cavaliers (CLE)</option><option value="DAL">Dallas Mavericks (DAL)</option><option value="DEN">Denver Nuggets (DEN)</option><option value="DET">Detroit Pistons (DET)</option><option value="GSW">Golden State Warriors (GSW)</option><option value="HOU">Houston Rockets (HOU)</option><option value="IND">Indiana Pacers (IND)</option><option value="LAC">LA Clippers (LAC)</option><option value="LAL">Los Angeles Lakers (LAL)</option><option value="MEM">Memphis Grizzlies (MEM)</option><option value="MIA">Miami Heat (MIA)</option><option value="MIL">Milwaukee Bucks (MIL)</option><option value="MIN">Minnesota Timberwolves (MIN)</option><option value="NOP">New Orleans Pelicans (NOP)</option><option value="NYK">New York Knicks (NYK)</option><option value="OKC">Oklahoma City Thunder (OKC)</option><option value="ORL">Orlando Magic (ORL)</option><option value="PHI">Philadelphia 76ers (PHI)</option><option value="PHX">Phoenix Suns (PHX)</option><option value="POR">Portland Trail Blazers (POR)</option><option value="SAC">Sacramento Kings (SAC)</option><option value="SAS">San Antonio Spurs (SAS)</option><option value="TOR">Toronto Raptors (TOR)</option><option value="UTA">Utah Jazz (UTA)</option><option value="WAS">Washington Wizards (WAS)</option></select></label></div><div><label>Forecast date<input type="date" id="date"></label></div><div><label>Home-court advantage (points, total)<input id="hca" type="number" value="2" step="0.5" min="-10" max="10"></label></div><div><label>Market home spread (optional)<input id="spread" type="number" step="0.5" placeholder="e.g. -3.5"></label></div><div><label>Market total (optional)<input id="total" type="number" step="0.5" placeholder="e.g. 225.5"></label></div></div><h3>Selected team ratings</h3><p>Ratings are points per 100 possessions. Higher ORtg and lower DRtg are better. Adjustments are added to the corresponding rating.</p><div class="grid"><div><h4 id="awayTitle">Away</h4><label>Offensive rating<input id="ao" type="number" step="0.1" value="120.8"></label><label>Defensive rating<input id="ad" type="number" step="0.1" value="112.7"></label><label>Pace<input id="ap" type="number" step="0.1" value="94.8"></label></div><div><h4 id="homeTitle">Home</h4><label>Offensive rating<input id="ho" type="number" step="0.1" value="119.9"></label><label>Defensive rating<input id="hd" type="number" step="0.1" value="113.3"></label><label>Pace<input id="hp" type="number" step="0.1" value="96.8"></label></div></div><button id="predict" type="button" >Project NBA matchup</button><p id="runtime" class="warn">Browser check: waiting for JavaScript. If this stays visible, use the hosted HTTPS version in Chrome; iPhone Files preview may block scripts.</p><div id="results" role="status" style="margin-top:15px">Projection not run yet. Open the hosted HTTPS version in Chrome if the browser check remains waiting.</div></section><section id="spreadImpactPanel"><h2>NBA 1.3.1 · Verified spread breakdown</h2><p>Changes measured in home-minus-away points (positive = stronger home margin). This is a decomposition of the <b>current projection estimates</b>, not proof of a profitable betting edge.</p><div id="spreadImpact" class="metric" role="status">Waiting for ratings.</div></section><section id="seasonPanel"><h2>NBA 1.2 · Automated current-season data</h2><p>Automatic GitHub Actions game-data updates estimate 2026–27 offensive efficiency, defensive efficiency, and pace. Teams are adjusted for the historical rating of opponents faced, then <strong>shrunk toward 2025–26 priors</strong> because early samples are small. The website fetches a published CSV from this same GitHub Pages site at startup. Historical ratings remain available if the data file is missing.</p><label for="gamefile">Backup: import completed games CSV (optional)</label><input type="file" accept=".csv,text/csv" id="gamefile"><button type="button" id="reloadData">Refresh automated data</button><p id="autoStatus" role="status" class="warn">Automatic data not checked yet.</p><small>Columns: <code>date,away,home,away_score,home_score,away_possessions,home_possessions</code>. Each row is one finished game; dates must be YYYY-MM-DD. Possessions must be measured or consistently estimated in advance and included in the CSV. Game results are included only when game date is before the selected forecast date.</small><p id="seasonStatus" class="warn">Checking for automated 2026–27 completed games; historical baseline used until available.</p><div class="grid"><div class="metric"><small>Eligible prior games</small><strong id="eligibleGames">0</strong></div><div class="metric"><small>Teams with current data</small><strong id="coveredTeams">0 / 30</strong></div></div><h3>Adjustment diagnostics (selected matchup)</h3><div id="diagnostics" class="metric">Awaiting calculation</div><h3>Opponent-adjusted ratings</h3><div style="overflow-x:auto"><table><thead><tr><th>Team</th><th>Games</th><th>Off</th><th>Def</th><th>Pace</th><th>Mode</th></tr></thead><tbody id="ratingTable"><tr><td colspan="6">No current games imported</td></tr></tbody></table></div><button type="button" id="exportRatings">Export active team ratings CSV</button><button type="button" id="resetSeason" style="background:#374c69">Remove game results · Restore imported/historical ratings</button><p><small>Model note: this is a provisional one-pass opponent-baseline adjustment, <b>not</b> a calibrated betting model, iterative team-strength solution, or injury-aware live feed. Avoid using post-tipoff data for historical tests.</small></p></section><section><h2>Method &amp; safeguards</h2><p>Expected pace = mean of team paces. Away efficiency = league baseline + (away adjusted ORtg − league baseline) + (home adjusted DRtg − league baseline). Home efficiency follows the inverse matchup. Scores = expected pace × efficiency / 100; half the home-court advantage is added to the home score and half subtracted from away. League baseline is fixed at 115 for this prototype, not an automatically updated NBA estimate.</p><p>Historical ratings source: RealGM 2025–26 NBA Advanced Stats (regular-season full-year team totals), https://basketball.realgm.com/nba/team-stats/2026/Advanced_Stats/Team_Totals/Regular_Season . These ratings are not a 2026–27 forecast and may be stale. No win probability, calibrated confidence, betting EV, injury impact, travel/rest effects, or validated backtest is claimed. A 2-point market difference is only a provisional directional lean, not a profitable edge. This release loads completed-game data written by a scheduled GitHub Actions updater; it is not a live in-game feed. Verify CSV timestamps and exclude post-tipoff data before using historical forecasts.</p></section></main><script>
+const names={ATL:'Atlanta Hawks',BOS:'Boston Celtics',BKN:'Brooklyn Nets',CHA:'Charlotte Hornets',CHI:'Chicago Bulls',CLE:'Cleveland Cavaliers',DAL:'Dallas Mavericks',DEN:'Denver Nuggets',DET:'Detroit Pistons',GSW:'Golden State Warriors',HOU:'Houston Rockets',IND:'Indiana Pacers',LAC:'LA Clippers',LAL:'Los Angeles Lakers',MEM:'Memphis Grizzlies',MIA:'Miami Heat',MIL:'Milwaukee Bucks',MIN:'Minnesota Timberwolves',NOP:'New Orleans Pelicans',NYK:'New York Knicks',OKC:'Oklahoma City Thunder',ORL:'Orlando Magic',PHI:'Philadelphia 76ers',PHX:'Phoenix Suns',POR:'Portland Trail Blazers',SAC:'Sacramento Kings',SAS:'San Antonio Spurs',TOR:'Toronto Raptors',UTA:'Utah Jazz',WAS:'Washington Wizards'};
+const $=id=>document.getElementById(id),teams={};let imported=false;
+const preseasonRatings={OKC:[118.9,107.7,99.3],SAS:[119.6,111.3,99.9],DET:[117.9,109.7,99.2],BOS:[120.8,112.7,94.8],NYK:[119.9,113.3,96.8],HOU:[118.6,113.2,96.1],DEN:[122.6,117.4,98.4],CHA:[119.4,114.4,96.8],CLE:[119.2,115.1,99.9],MIN:[116.8,113.5,100.5],TOR:[115.9,113.0,98.4],ATL:[116.1,113.7,101.6],MIA:[116.7,114.5,103.4],LAL:[118.2,116.4,98.3],PHX:[115.4,113.9,97.2],LAC:[117.3,116.1,96.5],ORL:[114.9,114.3,100.0],PHI:[115.4,115.6,99.4],POR:[114.4,114.7,100.5],GSW:[115.0,115.6,99.0],NOP:[114.4,118.9,100.3],CHI:[113.0,118.1,102.5],DAL:[111.2,116.5,101.7],MEM:[112.9,118.8,101.3],MIL:[112.9,119.3,97.6],IND:[110.9,118.8,101.0],UTA:[114.1,122.3,102.3],SAC:[111.4,121.5,99.2],BKN:[108.7,119.0,97.0],WAS:[111.0,122.7,101.4]};
+for(const k of Object.keys(names)){const [off,def,pace]=preseasonRatings[k];teams[k]={off,def,pace,so:0,sd:0,games:82,asof:'2025-26 season',source:'baseline'};}
+$('away').value='BOS';$('home').value='NYK';$('date').value=new Date().toISOString().slice(0,10);
+function refresh(){for(const [prefix,key,title] of [['a',$('away').value,'awayTitle'],['h',$('home').value,'homeTitle']]){const t=teams[key];$(title).textContent=names[key]+' ('+key+')';$(prefix+'o').value=t.off;$(prefix+'d').value=t.def;$(prefix+'p').value=t.pace;}}refresh();
+for(const id of ['away','home'])$(id).addEventListener('change',refresh);
+function csvRows(s){const rows=[];let row=[],v='',quoted=false;for(let i=0;i<s.length;i++){const c=s[i];if(c==='"'){if(quoted&&s[i+1]==='"'){v+='"';i++;}else quoted=!quoted;}else if(c===','&&!quoted){row.push(v);v='';}else if((c==='\n'||c==='\r')&&!quoted){if(c==='\r'&&s[i+1]==='\n')i++;row.push(v);v='';if(row.some(x=>x.trim()))rows.push(row);row=[];}else v+=c;}if(v||row.length){row.push(v);rows.push(row);}return rows;}
+$('csv').addEventListener('change',async e=>{try{const file=e.target.files[0];if(!file)return;const rows=csvRows(await file.text());const head=rows.shift().map(x=>x.trim().toLowerCase());const required=['team','off_rtg','def_rtg','pace'];if(required.some(x=>!head.includes(x)))throw Error('Missing required CSV headers: '+required.join(', '));let count=0;const updates={};for(const row of rows){const get=k=>row[head.indexOf(k)]?.trim();const alias={NO:'NOP',SA:'SAS',GS:'GSW',NY:'NYK',PHO:'PHX',UTAH:'UTA'};const key=alias[(get('team')||'').toUpperCase()]||(get('team')||'').toUpperCase();if(!names[key])throw Error('Unknown NBA team: '+key);if(updates[key])throw Error('Duplicate team: '+key);const off=Number(get('off_rtg')),def=Number(get('def_rtg')),pace=Number(get('pace'));if(![off,def,pace].every(Number.isFinite)||off<70||off>160||def<70||def>160||pace<70||pace>125)throw Error('Invalid ratings for '+key);const so=head.includes('sos_off_adj')?Number(get('sos_off_adj')||0):0,sd=head.includes('sos_def_adj')?Number(get('sos_def_adj')||0):0;if(!Number.isFinite(so)||!Number.isFinite(sd)||Math.abs(so)>30||Math.abs(sd)>30)throw Error('Invalid SOS adjustment for '+key);updates[key]={off,def,pace,so,sd,games:head.includes('games')?Number(get('games')||0):0,asof:head.includes('as_of')?get('as_of'):'',source:'csv'};count++;}if(!count)throw Error('No team rows found');for(const [k,v] of Object.entries(updates))teams[k]=v;imported=true;refresh();$('status').textContent='Imported '+count+' teams from '+file.name+'. Other teams retain the 2025–26 historical baseline. Check dates before projecting.';$('status').className='ok';}catch(err){$('status').textContent='Import rejected: '+err.message;$('status').className='warn';}});
+window.nbaProject=function(){const a=$('away').value,h=$('home').value;if(a===h){$('results').textContent='Choose two different teams.';return;}const get=(p,k)=>Number($(p+k).value);const ao=get('a','o'),ad=get('a','d'),ap=get('a','p'),ho=get('h','o'),hd=get('h','d'),hp=get('h','p'),hca=Number($('hca').value);if(![ao,ad,ap,ho,hd,hp,hca].every(Number.isFinite)||[ao,ad,ho,hd].some(x=>x<70||x>160)||[ap,hp].some(x=>x<70||x>125)){ $('results').textContent='Enter plausible numeric ratings and pace for both teams.';return;}const pace=(ap+hp)/2,ae=ao+teams[a].so+hd+teams[h].sd-115,he=ho+teams[h].so+ad+teams[a].sd-115,awayPts=pace*ae/100-hca/2,homePts=pace*he/100+hca/2;const margin=homePts-awayPts,total=homePts+awayPts,fmt=x=>x.toFixed(1);const m=String($('spread').value||'').trim(),t=String($('total').value||'').trim();const spreadLean=m===''?'No market line entered':Math.abs(margin+Number(m))<2?'PASS (difference under 2 pts)':margin+Number(m)>0?'Home ATS lean (uncalibrated)':'Away ATS lean (uncalibrated)';const totalLean=t===''?'No market total entered':Math.abs(total-Number(t))<2?'PASS (difference under 2 pts)':total>Number(t)?'OVER lean (uncalibrated)':'UNDER lean (uncalibrated)';const csvSelected=teams[a].source==='csv'&&teams[h].source==='csv';const warning=csvSelected?'USER CSV RATINGS: verify both teams and dates.\n':'HISTORICAL 2025-26 BASELINE: not current 2026-27 ratings. No live feed, injuries or lineup adjustment.\n';$('results').textContent=warning+'MATCHUP: '+names[a]+' @ '+names[h]+'\nAway projected: '+fmt(awayPts)+'\nHome projected: '+fmt(homePts)+'\nFair home spread: '+(margin>=0?'-':'+')+fmt(Math.abs(margin))+'\nProjected total: '+fmt(total)+'\nProjected winner: '+(margin>0?names[h]:margin<0?names[a]:'Tied')+'\nExpected possessions: '+fmt(pace)+'\nSpread lean: '+spreadLean+'\nTotal lean: '+totalLean+'\nData: '+(imported?'CSV/manual ratings; verify coverage and dates':'2025–26 offline historical ratings baseline')+'\nConfidence: UNCALIBRATED; no verified betting edge';};
+function reportProjectionError(err){$('runtime').className='warn';$('runtime').textContent='JavaScript projection error: '+(err&&err.message?err.message:String(err));$('results').textContent='Projection could not complete. Try the hosted HTTPS version in Chrome.';}
+$('predict').addEventListener('click',function(){try{window.nbaProject();}catch(err){reportProjectionError(err);}});
+window.addEventListener('error',function(e){reportProjectionError(e.error||e.message||'Unknown script error');});
+$('runtime').textContent='Browser check: JavaScript is running. Projection engine ready.';$('runtime').className='ok';
+try{window.nbaProject();}catch(err){reportProjectionError(err);}
+</script><script>
+(function(){
+'use strict';
+var $n=function(id){return document.getElementById(id);};
+var prior={};
+function snapshot(){Object.keys(teams).forEach(function(k){prior[k]=Object.assign({},teams[k]);});}
+var games=[];
+var components={};
+var aliases={NO:'NOP',SA:'SAS',GS:'GSW',NY:'NYK',PHO:'PHX',UTAH:'UTA'};
+function teamId(x){var s=String(x||'').trim().toUpperCase();return aliases[s]||s;}
+function dateOK(s){return /^\d{4}-\d{2}-\d{2}$/.test(s)&&!isNaN(Date.parse(s+'T00:00:00Z'))&&new Date(s+'T00:00:00Z').toISOString().slice(0,10)===s;}
+function cleanNum(v,name,min,max){var s=String(v==null?'':v).trim();var n=Number(s);if(s===''||!Number.isFinite(n)||n<min||n>max)throw Error('Invalid '+name+': '+s);return n;}
+function r1(x){return (Math.round(x*10)/10).toFixed(1);}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function render(){
+ var body=$n('ratingTable'), rows=[];Object.keys(names).sort().forEach(function(k){var t=teams[k];if(t.gamesCurrent||k===$n('away').value||k===$n('home').value){rows.push('<tr><td>'+esc(k)+'</td><td>'+(t.gamesCurrent||0)+'</td><td>'+r1(t.off)+'</td><td>'+r1(t.def)+'</td><td>'+r1(t.pace)+'</td><td>'+esc(t.source)+'</td></tr>');}});
+ body.innerHTML=rows.join('')||'<tr><td colspan="6">No ratings</td></tr>';
+}
+function recalc(){
+ Object.keys(prior).forEach(function(k){teams[k]=Object.assign({},prior[k]);});
+ var cutoff=$n('date').value;if(!dateOK(cutoff))throw Error('Choose a valid forecast date (YYYY-MM-DD).');
+ var applicable=games.filter(function(g){return g.date<cutoff;});
+ var sums={};Object.keys(teams).forEach(function(k){sums[k]={n:0,o:0,d:0,p:0,rawO:0,rawD:0,sosO:0,sosD:0,latest:''};});
+ applicable.forEach(function(g){
+ var a=prior[g.away],h=prior[g.home];
+ // Opponent quality is drawn from historical priors, not from the future.
+ var ra=g.awayScore*100/g.awayPoss-(a.off+h.def-115);
+ var rh=g.homeScore*100/g.homePoss-(h.off+a.def-115);
+ var aa=sums[g.away],hh=sums[g.home];
+ aa.n++;aa.o+=ra;aa.d+=rh;aa.p+=g.awayPoss;aa.rawO+=g.awayScore*100/g.awayPoss-a.off;aa.rawD+=g.homeScore*100/g.homePoss-a.def;aa.sosO+=115-h.def;aa.sosD+=115-h.off;aa.latest=aa.latest>g.date?aa.latest:g.date;
+ hh.n++;hh.o+=rh;hh.d+=ra;hh.p+=g.homePoss;hh.rawO+=g.homeScore*100/g.homePoss-h.off;hh.rawD+=g.awayScore*100/g.awayPoss-h.def;hh.sosO+=115-a.def;hh.sosD+=115-a.off;hh.latest=hh.latest>g.date?hh.latest:g.date;
+ });
+ var count=0;components={};
+ Object.keys(sums).forEach(function(k){var x=sums[k],t=teams[k],base=prior[k];if(!x.n)return;count++;
+ var weight=x.n/(x.n+10); // 10-game regularization; heuristic, not fitted.
+ components[k]={rawOff:weight*x.rawO/x.n,rawDef:weight*x.rawD/x.n,sosOff:weight*x.sosO/x.n,sosDef:weight*x.sosD/x.n};
+ t.off=base.off+weight*x.o/x.n;t.def=base.def+weight*x.d/x.n;
+ t.pace=base.pace+weight*(x.p/x.n-base.pace);
+ t.gamesCurrent=x.n;t.asof=x.latest;t.source='2026-27 games (shrunk)';
+ // Previous optional SOS offsets should not be applied twice.
+ t.so=0;t.sd=0;
+ });
+ $n('eligibleGames').textContent=String(applicable.length);$n('coveredTeams').textContent=count+' / 30';
+ $n('seasonStatus').className=applicable.length?'ok':'warn';
+ $n('seasonStatus').textContent=games.length?('Imported '+games.length+' games; '+applicable.length+' before '+cutoff+'. '+count+' teams with current data. '+(applicable.length?'Opponent-baseline adjustments active.':'Historical baseline only at this date.')):'No 2026–27 completed-game CSV imported. Historical baseline only.';
+ refresh();render();
+ var ak=$n('away').value,hk=$n('home').value;
+ function diag(k){var t=teams[k],p=prior[k];return '<div><b>'+esc(names[k])+'</b> · '+(t.gamesCurrent||0)+' prior games · offense '+r1(p.off)+' → '+r1(t.off)+' ('+r1(t.off-p.off)+') · defense '+r1(p.def)+' → '+r1(t.def)+' ('+r1(t.def-p.def)+') · pace '+r1(p.pace)+' → '+r1(t.pace)+'</div>';}
+ $n('diagnostics').innerHTML='<small>Raw 2025–26 prior → shrunk, opponent-baseline-adjusted current estimate. Differences reflect both current form and opposition, not isolated SOS points.</small>'+diag(ak)+diag(hk);
+ try{window.nbaProject();renderSpreadImpact();}catch(err){$n('seasonStatus').textContent='Projection error: '+err.message;$n('seasonStatus').className='warn';}
+}
+snapshot();
+$n('gamefile').addEventListener('change',async function(e){try{
+ var f=e.target.files[0];if(!f)return;
+ var rows=csvRows(await f.text());if(!rows.length)throw Error('File is empty');
+ var headers=rows.shift().map(function(s){return s.trim().toLowerCase().replace(/^\ufeff/,'');});
+ var required=['date','away','home','away_score','home_score','away_possessions','home_possessions'];
+ if(required.some(function(x){return headers.indexOf(x)<0;}))throw Error('Missing headers: '+required.filter(function(x){return headers.indexOf(x)<0;}).join(', '));
+ function cell(r,k){return r[headers.indexOf(k)];}
+ var all=[],ids={};rows.forEach(function(r,i){
+ var d=String(cell(r,'date')||'').trim(),a=teamId(cell(r,'away')),h=teamId(cell(r,'home'));
+ if(!dateOK(d))throw Error('Row '+(i+2)+': invalid date');
+ if(d<'2026-10-01'||d>'2027-07-31')throw Error('Row '+(i+2)+': outside 2026-27 season window');
+ if(!names[a]||!names[h]||a===h)throw Error('Row '+(i+2)+': invalid teams');
+ var as=cleanNum(cell(r,'away_score'),'away score',40,200),hs=cleanNum(cell(r,'home_score'),'home score',40,200),ap=cleanNum(cell(r,'away_possessions'),'away possessions',65,125),hp=cleanNum(cell(r,'home_possessions'),'home possessions',65,125);
+ var key=[d,a,h].join('|');if(ids[key])throw Error('Duplicate matchup on '+d+': '+a+' @ '+h);ids[key]=true;
+ all.push({date:d,away:a,home:h,awayScore:as,homeScore:hs,awayPoss:ap,homePoss:hp});
+ });
+ if(!all.length)throw Error('No finished games found');
+ games=all;recalc();
+ }catch(err){$n('seasonStatus').textContent='Game CSV rejected: '+err.message;$n('seasonStatus').className='warn';}
+ });
+ $n('date').addEventListener('change',function(){try{recalc();}catch(err){$n('seasonStatus').textContent='Date error: '+err.message;$n('seasonStatus').className='warn';}});
+ // Keep compatibility with importing existing team ratings; those become the new fallback prior.
+ $n('csv').addEventListener('change',function(){setTimeout(function(){if($n('status').className==='ok'){snapshot();try{recalc();}catch(err){$n('seasonStatus').textContent=err.message;}}},80);});
+ $n('resetSeason').addEventListener('click',function(){games=[];$n('gamefile').value='';recalc();});
+ $n('exportRatings').addEventListener('click',function(){
+ var head=['team','off_rtg','def_rtg','pace','games_current','as_of','source'];
+ var data=[head.join(',')];Object.keys(names).sort().forEach(function(k){var t=teams[k];data.push([k,r1(t.off),r1(t.def),r1(t.pace),t.gamesCurrent||0,t.asof||'',t.source||''].map(function(x){return '"'+String(x).replace(/"/g,'""')+'"';}).join(','));});
+ var blob=new Blob([data.join('\n')+'\n'],{type:'text/csv;charset=utf-8'}),u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download='nba_ratings_asof_'+$n('date').value+'.csv';document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);
+ });
+ async function reloadAuto(){
+   var status=$n('autoStatus');status.textContent='Checking GitHub Pages data file…';status.className='warn';
+   try{
+     var res=await fetch('./data/nba_games_2026_27.csv?ts='+Date.now(),{cache:'no-store'});
+     if(!res.ok)throw Error('data file not published yet (HTTP '+res.status+')');
+     var rows=csvRows(await res.text());if(!rows.length)throw Error('automated CSV empty');
+     var head=rows.shift().map(function(s){return s.trim().toLowerCase().replace(/^\ufeff/,'');});
+     var required=['date','away','home','away_score','home_score','away_possessions','home_possessions'];
+     if(required.some(function(k){return head.indexOf(k)<0;}))throw Error('missing expected columns');
+     var parsed=[],seen={};
+     rows.forEach(function(r){var get=function(k){return String(r[head.indexOf(k)]||'').trim();},d=get('date'),a=teamId(get('away')),h=teamId(get('home'));
+       if(!dateOK(d)||!names[a]||!names[h]||a===h)throw Error('invalid game record '+d);
+       if(d<'2026-10-01'||d>'2027-07-31')throw Error('outside 2026–27 season: '+d);
+       var k=d+'|'+a+'|'+h;if(seen[k])throw Error('duplicate: '+k);seen[k]=true;
+       parsed.push({date:d,away:a,home:h,awayScore:cleanNum(get('away_score'),'away score',40,200),homeScore:cleanNum(get('home_score'),'home score',40,200),awayPoss:cleanNum(get('away_possessions'),'away possessions',65,130),homePoss:cleanNum(get('home_possessions'),'home possessions',65,130)});
+     });
+     if(!parsed.length)throw Error('no completed games');
+     games=parsed;recalc();status.textContent='Automatic data loaded: '+parsed.length+' completed games. Forecast cutoff still applies.';status.className='ok';
+     try{var mr=await fetch('./data/nba_update_status.json?ts='+Date.now(),{cache:'no-store'});if(mr.ok){var m=await mr.json();status.textContent+=' Last update '+m.generated_at+'; source '+m.source+'; ingest errors '+m.error_count+'.';}}catch(_e){}
+   }catch(e){status.textContent='Automatic feed unavailable: '+e.message+'. Historical 2025–26 baseline remains in use unless you import a backup.';status.className='warn';}
+ }
+
+function renderSpreadImpact(){
+ var a=$n('away').value,h=$n('home').value,box=$n('spreadImpact');
+ if(a===h){box.textContent='Choose two different teams.';return;}
+ var baseA=prior[a],baseH=prior[h],curA=teams[a],curH=teams[h];
+ var fields=[['ao',curA.off],['ad',curA.def],['ap',curA.pace],['ho',curH.off],['hd',curH.def],['hp',curH.pace]];
+ var manuallyEdited=fields.some(function(f){return Math.abs(Number($n(f[0]).value)-f[1])>.06;});
+ var homeAdv=Number($n('hca').value);
+ function predict(ao,ad,ap,ho,hd,hp){
+  var pace=(ap+hp)/2;
+  // Identical scoring relationship to the main projection button.
+  var away=pace*(ao+hd-115)/100-homeAdv/2;
+  var home=pace*(ho+ad-115)/100+homeAdv/2;
+  return {margin:home-away,total:home+away,home:home,away:away,pace:pace};
+ }
+ var cpA=components[a]||{rawOff:0,rawDef:0,sosOff:0,sosDef:0};
+ var cpH=components[h]||{rawOff:0,rawDef:0,sosOff:0,sosDef:0};
+ var p0=predict(baseA.off,baseA.def,baseA.pace,baseH.off,baseH.def,baseH.pace);
+ var p1=predict(baseA.off+cpA.rawOff,baseA.def+cpA.rawDef,curA.pace,
+                 baseH.off+cpH.rawOff,baseH.def+cpH.rawDef,curH.pace);
+ // Final is calculated from actual inputs fed into Project NBA matchup.
+ var ao=Number($n('ao').value),ad=Number($n('ad').value),ap=Number($n('ap').value),
+     ho=Number($n('ho').value),hd=Number($n('hd').value),hp=Number($n('hp').value);
+ var p2=predict(ao,ad,ap,ho,hd,hp);
+ var form=p1.margin-p0.margin;
+ var sos=predict(curA.off,curA.def,curA.pace,curH.off,curH.def,curH.pace).margin-p1.margin;
+ var manual=p2.margin-predict(curA.off,curA.def,curA.pace,curH.off,curH.def,curH.pace).margin;
+ var difference=p2.margin-(p0.margin+form+sos+manual);
+ function f(x){return x.toFixed(2);}
+ function signed(x){return (x>=0?'+':'')+f(x)+' pts';}
+ function side(m){return m>0?'HOME -'+f(m):m<0?'AWAY -'+f(-m):'PICK';}
+ function line(label,val){return '<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid #344661;padding:9px 0"><span>'+label+'</span><strong style="text-align:right">'+val+'</strong></div>';}
+ var heading='<small>Before '+esc($n('date').value)+' · '+esc(names[a])+' @ '+esc(names[h])+' · away '+(curA.gamesCurrent||0)+' games, home '+(curH.gamesCurrent||0)+' games</small>';
+ var note='<p><small>All components use the same score formula and home-court setting as the projection button. + margin change favors the home team. Opponent impact uses last-season opponent baselines and is not a calibrated SOS estimate.</small></p>';
+ box.innerHTML=heading
+ +line('Historical baseline fair spread',side(p0.margin))
+ +line('Current form + pace',signed(form))
+ +line('Opponent-strength impact',signed(sos))
+ +(manuallyEdited?line('Manual rating changes',signed(manual)):'')
+ +line('FINAL ADJUSTED FAIR SPREAD',side(p2.margin))
+ +line('Final projected score',esc(names[a])+' '+f(p2.away)+' · '+esc(names[h])+' '+f(p2.home))
+ +line('Final projected total',f(p2.total))
+ +line('Reconciliation difference',signed(difference))
+ +'<p><small>Baseline home margin '+f(p0.margin)+' + form '+f(form)+' + opponent '+f(sos)+(manuallyEdited?' + manual '+f(manual):'')+' = final home margin '+f(p2.margin)+' points. Figures are displayed to two decimals; the calculation uses unrounded values.</small></p>'
+ +note;
+}
+
+$n('predict').addEventListener('click',renderSpreadImpact);
+
+ $n('reloadData').addEventListener('click',reloadAuto);
+ try{recalc();}catch(err){$n('seasonStatus').textContent='Initialization issue: '+err.message;}
+ reloadAuto();
+})();
+</script></body></html>
