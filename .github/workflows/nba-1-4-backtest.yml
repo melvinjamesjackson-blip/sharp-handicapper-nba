@@ -1,0 +1,26 @@
+name: NBA 1.4 Walk-forward Backtest
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify input data exists
+        run: |
+          test -s data/nba_games_2026_27.csv || { echo 'Missing completed game data. Run NBA updater first.'; exit 1; }
+          test -s data/nba_2025_26_team_ratings_baseline.csv || { echo 'Missing historical priors CSV.'; exit 1; }
+      - name: Run walk-forward comparison
+        run: python scripts/nba_1_4_backtest.py
+      - name: Upload backtest results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nba-1-4-backtest
+          path: backtests/nba_1_4/
+          if-no-files-found: warn
