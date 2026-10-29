@@ -1,0 +1,39 @@
+{
+  "version": "NBA 1.4",
+  "generated_at": "2026-10-29T01:56:26.536585+00:00",
+  "evaluation_method": "walk-forward; all same-day games excluded before rating update",
+  "data_cutoff": "game date strictly before prediction date",
+  "total_source_games": 53,
+  "tested_games": 53,
+  "date_range": [
+    "2026-10-21",
+    "2026-10-28"
+  ],
+  "home_court_points": 2.0,
+  "shrink_denominator": 10.0,
+  "min_prior_games": 0,
+  "results": {
+    "baseline": {
+      "games": 53,
+      "margin_mae": 11.577,
+      "total_mae": 14.807,
+      "winner_accuracy": 0.717,
+      "margin_bias": 2.159,
+      "total_bias": 1.33
+    },
+    "adjusted": {
+      "games": 53,
+      "margin_mae": 11.583,
+      "total_mae": 15.085,
+      "winner_accuracy": 0.6226,
+      "margin_bias": 1.525,
+      "total_bias": -0.315
+    }
+  },
+  "notes": [
+    "Historical 2025-26 prior is fixed and not trained on evaluation games.",
+    "No closing market lines provided; ATS ROI and betting edge cannot be assessed.",
+    "Short early-season history may produce highly unstable accuracy.",
+    "Opponent-adjusted variant is one-pass opponent-prior residual adjustment, not an iterative or calibrated solution."
+  ]
+}
