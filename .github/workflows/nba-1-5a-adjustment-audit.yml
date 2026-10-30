@@ -1,0 +1,21 @@
+name: NBA 1.5A Adjustment Audit
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  adjustment-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run NBA 1.5A four-model audit
+        run: python scripts/nba_1_5a_adjustment_audit.py
+      - name: Upload reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: nba-1-5a-adjustment-audit
+          path: backtests/nba_1_5a/
+          if-no-files-found: error
