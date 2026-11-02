@@ -1,0 +1,22 @@
+name: NBA 1.5C Integrity and Rolling Validation
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Audit source data and run strict rolling backtest
+        run: python scripts/nba_1_5c_integrity_rolling.py
+      - name: Upload integrity issues and reports (even on failed validation)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nba-1-5c-integrity-rolling-report
+          path: backtests/nba_1_5c/
+          if-no-files-found: warn
