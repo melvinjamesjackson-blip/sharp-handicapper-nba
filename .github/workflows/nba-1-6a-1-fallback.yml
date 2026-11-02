@@ -1,0 +1,33 @@
+name: NBA 1.6A.1 Historical CSV Fallback (Test Only)
+on:
+  workflow_dispatch:
+    inputs:
+      season:
+        description: Historical season to generate, one at a time
+        required: true
+        type: choice
+        options:
+          - '2022_23'
+          - '2023_24'
+          - '2024_25'
+          - '2025_26'
+permissions:
+  contents: read
+jobs:
+  historical-fallback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Download and validate public season files
+        run: python scripts/nba_1_6a_1_fallback.py --season '${{ inputs.season }}' --out-dir generated/nba_history
+      - name: Upload CSVs and diagnostic even if validation fails
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nba-1-6a-1-${{ inputs.season }}
+          path: generated/nba_history/
+          if-no-files-found: warn
