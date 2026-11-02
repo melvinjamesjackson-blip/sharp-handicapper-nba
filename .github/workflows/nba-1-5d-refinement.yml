@@ -1,0 +1,22 @@
+name: NBA 1.5D Offline Model Refinement
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  refine:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run strict forward-only NBA comparison
+        run: python scripts/nba_1_5d_refinement.py
+      - name: Upload diagnostic reports (even on failure)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nba-1-5d-offline-report
+          path: backtests/nba_1_5d/
+          if-no-files-found: warn
