@@ -1,0 +1,32 @@
+name: NBA 1.6 Multi-Season Offline Validation
+on:
+  workflow_dispatch:
+    inputs:
+      strict_coverage:
+        description: 'Require all four seasons to be present (true/false)'
+        required: true
+        default: 'false'
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run offline multi-season comparison
+        run: |
+          if [ "${{ inputs.strict_coverage }}" = "true" ]; then
+            python scripts/nba_1_6_multiseason.py --strict-coverage
+          else
+            python scripts/nba_1_6_multiseason.py
+          fi
+      - name: Upload coverage and backtest files even if evaluation fails
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nba-1-6-multiseason-report
+          path: backtests/nba_1_6/
+          if-no-files-found: warn
