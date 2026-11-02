@@ -1,0 +1,35 @@
+name: NBA 1.6A Historical Data Generator (Test Only)
+on:
+  workflow_dispatch:
+    inputs:
+      season:
+        description: 'First select 2022_23, then 2023_24, 2024_25, 2025_26'
+        type: choice
+        required: true
+        options:
+          - '2022_23'
+          - '2023_24'
+          - '2024_25'
+          - '2025_26'
+permissions:
+  contents: read
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install NBA Stats client
+        run: python -m pip install 'nba_api>=1.9,<2' 'pandas>=2,<3'
+      - name: Generate selected season to artifact staging
+        run: python scripts/nba_1_6a_history.py --season '${{ inputs.season }}' --out-dir generated/nba_history
+      - name: Upload generated CSVs (never commit to repo automatically)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nba-1-6a-${{ inputs.season }}
+          path: generated/nba_history/
+          if-no-files-found: warn
