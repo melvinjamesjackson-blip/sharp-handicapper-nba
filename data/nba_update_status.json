@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-11-22T18:38:05.884815+00:00",
+  "generated_at": "2026-11-23T22:49:48.262946+00:00",
   "source": "ESPN site public scoreboard and summary (unofficial)",
-  "games": 240,
-  "new_games": 6,
-  "completed_events_found": 238,
-  "days_checked": 32,
+  "games": 247,
+  "new_games": 7,
+  "completed_events_found": 245,
+  "days_checked": 33,
   "errors": [],
   "error_count": 0,
   "possessions": "estimated: FGA - OREB + TO + 0.44*FTA",
-  "last_game_date": "2026-11-22"
+  "last_game_date": "2026-11-23"
 }
