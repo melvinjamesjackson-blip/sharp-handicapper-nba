@@ -1,12 +1,18 @@
 {
-  "generated_at": "2026-11-26T20:23:01.454299+00:00",
+  "generated_at": "2026-11-27T20:09:36.374922+00:00",
   "source": "ESPN site public scoreboard and summary (unofficial)",
   "games": 269,
-  "new_games": 9,
+  "new_games": 0,
   "completed_events_found": 267,
-  "days_checked": 36,
-  "errors": [],
-  "error_count": 0,
+  "days_checked": 37,
+  "errors": [
+    {
+      "date": "2026-11-09",
+      "event": "401909957",
+      "error": "<urlopen error [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1018)>"
+    }
+  ],
+  "error_count": 1,
   "possessions": "estimated: FGA - OREB + TO + 0.44*FTA",
   "last_game_date": "2026-11-26"
 }
